@@ -3,7 +3,7 @@ kind: Solution
 
 metadata:
   name: hello-world-cee7b
-  version: 1.0.1
+  version: 1.0.2
   description: Simple Hello World AI agent for testing 1
 
 assets:
