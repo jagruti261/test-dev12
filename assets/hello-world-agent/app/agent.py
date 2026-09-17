@@ -8,7 +8,7 @@ from opentelemetry import trace
 from langchain.agents import create_agent
 from langchain.agents.middleware import SummarizationMiddleware
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.tools import BaseTool
+from langchain_core.tools import BaseTool, tool
 from langchain_litellm import ChatLiteLLM
 from langgraph.graph.state import CompiledStateGraph
 from litellm.exceptions import (
@@ -144,11 +144,19 @@ def get_summarization_model_name() -> str:
 def get_system_prompt() -> str:
     base_prompt = """You are a friendly Hello World Agent. Greet the user warmly when they first message you, introducing yourself as the Hello World Agent. Respond helpfully and concisely to any follow-up messages. Keep responses short and friendly — you are a demo agent showing that the A2A agent runtime works correctly.
 
+You can also add two numbers together. When a user asks something like "what is 2+2?" or "add 3 and 5", use the add_numbers tool to compute the result and return the answer clearly.
+
 IMPORTANT: You MUST use tools to retrieve live data. Never fabricate, guess, or invent data. Relay tool errors verbatim without adding suggestions.""" + _DEFENSIVE_PROMPT_SUFFIX
     custom_resistance = get_injection_resistance()
     if custom_resistance:
         base_prompt += f"\n\n## Agent-Specific Security Guidelines\n{custom_resistance}"
     return base_prompt
+
+
+@tool
+def add_numbers(a: float, b: float) -> float:
+    """Add two numbers together and return the sum. Use this whenever the user asks to add or sum two numbers."""
+    return a + b
 
 
 def get_injection_resistance() -> str:

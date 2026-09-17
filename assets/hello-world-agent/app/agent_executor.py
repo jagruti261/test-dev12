@@ -13,7 +13,7 @@ from a2a.types import (
 from a2a.utils import new_agent_text_message, new_task
 from a2a.utils.errors import ServerError
 
-from agent import SampleAgent
+from agent import SampleAgent, add_numbers
 from load_skill_resources import get_load_skill_resource_tool
 from mcp_providers.agw import get_mcp_tools
 from prompt_injection_detector import wrap_tool
@@ -57,7 +57,7 @@ class AgentExecutor(A2AAgentExecutor):
         except Exception as e:
             logger.error(f"Failed to load tools from Agent Gateway: {e}")
 
-        tools = [*tools, *self.skill_tools]
+        tools = [*tools, *self.skill_tools, add_numbers]
 
         # Wrap all tools with prompt injection scanning for uniform protection
         tools = [wrap_tool(t) for t in tools]
